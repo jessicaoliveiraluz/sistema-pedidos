@@ -1,13 +1,28 @@
 package com.controlePedidos.domain.model;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Produto {
 
-    private UUID id;
-    private String nome;
-    private Integer estoque;
+    private String id;
+    private String descricao;
+    private Integer quantidadeEstoque;
     private BigDecimal precoUnitario;
+
+    public void removerDoEstoque(int quantidade) {
+        if (quantidade <= 0) {
+            throw new IllegalArgumentException("A quantidade a remover deve ser maior que zero.");
+        }
+        if (quantidade > this.quantidadeEstoque) {
+            throw new IllegalArgumentException("Estoque insuficiente para o produto: " + this.descricao);
+        }
+        this.quantidadeEstoque -= quantidade;
+    }
 }

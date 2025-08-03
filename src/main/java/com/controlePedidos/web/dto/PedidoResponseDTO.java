@@ -1,4 +1,4 @@
-package com.controlePedidos.domain.model;
+package com.controlePedidos.web.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,11 +11,11 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Pedido {
+public class PedidoResponseDTO {
 
     private String id;
-    private List<ProdutoSolicitado> produtos;
+    private List<ItemPedidoDTO> itens;
     private BigDecimal valorTotal;
     private LocalDateTime dataHora;
-    private StatusPedido status;
+    private String status;
 }
