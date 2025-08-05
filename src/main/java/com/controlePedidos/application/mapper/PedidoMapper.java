@@ -26,7 +26,7 @@ public class PedidoMapper {
         PedidoResponseDTO dto = new PedidoResponseDTO();
         dto.setId(pedido.getId());
         dto.setStatus(pedido.getStatus().name());
-        dto.setDataHora(pedido.getDataHora());
+        dto.setDataHora(pedido.getDataHora().toString());
         dto.setValorTotal(pedido.getValorTotal());
         dto.setItens(itens);
         return dto;

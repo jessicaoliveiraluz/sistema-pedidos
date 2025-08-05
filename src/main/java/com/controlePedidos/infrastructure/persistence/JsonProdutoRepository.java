@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public class JsonProdutoRepository implements ProdutoRepository {
 
-    private static final String CAMINHO_ARQUIVO_PRODUTOS = "src/main/resources/db/produtos.json";
+    private static final String CAMINHO_ARQUIVO_PRODUTOS = "./src/main/resources/db/produtos.json";
     private ObjectMapper mapper = new ObjectMapper();
 
     @Override
@@ -60,6 +60,8 @@ public class JsonProdutoRepository implements ProdutoRepository {
     private List<Produto> listarProdutosDoArquivo() {
         try {
             File file = new File(CAMINHO_ARQUIVO_PRODUTOS);
+            file.listFiles();
+            //(new File("./src/main/java/com/controlePedidos/db")).listFiles()
             if (!file.exists()) {
                 throw new RuntimeException("Arquivo de produtos não encontrado.");
             }
@@ -77,21 +79,7 @@ public class JsonProdutoRepository implements ProdutoRepository {
 //        produtos.add(produto);
 //        salvarTodos(produtos);
 //    }
-//
-//    @Override
-//    public Optional<Produto> buscarPorId(String id) {
-//        return listarTodos().stream()
-//                .filter(p -> p.getId().equals(id))
-//                .findFirst();
-//    }
-//
-//    @Override
-//    public Optional<Produto> buscarPorDescricao(String descricao) {
-//        return listarTodos().stream()
-//                .filter(p -> p.getDescricao().equalsIgnoreCase(descricao))
-//                .findFirst();
-//    }
-//
+
 //    @Override
 //    public List<Produto> listarTodos() {
 //        try {
@@ -102,7 +90,7 @@ public class JsonProdutoRepository implements ProdutoRepository {
 //            throw new RuntimeException("Erro ao ler produtos", e);
 //        }
 //    }
-//
+
 //    private void salvarTodos(List<Produto> produtos) {
 //        try {
 //            File file = new File("data");

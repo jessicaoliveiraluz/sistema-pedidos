@@ -16,5 +16,7 @@ public class ProdutoSolicitado {
     private BigDecimal precoUnitario;
 
     public ProdutoSolicitado(String descricao, int quantidade) {
+        this.descricao = descricao;
+        this.quantidade = quantidade;
     }
 }

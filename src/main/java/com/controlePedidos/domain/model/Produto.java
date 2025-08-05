@@ -25,4 +25,11 @@ public class Produto {
         }
         this.quantidadeEstoque -= quantidade;
     }
+
+    public void adicionarAoEstoque(int quantidade) {
+        if (quantidade <= 0) {
+            throw new IllegalArgumentException("A quantidade a adicionar deve ser maior que zero.");
+        }
+        this.quantidadeEstoque += quantidade;
+    }
 }

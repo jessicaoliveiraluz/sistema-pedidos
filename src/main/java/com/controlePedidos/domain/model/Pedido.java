@@ -5,17 +5,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Pedido {
 
-    private String id;
+    private UUID id;
     private List<ProdutoSolicitado> produtos;
     private BigDecimal valorTotal;
-    private LocalDateTime dataHora;
+    private String dataHora;
     private StatusPedido status;
+
+    public void cancelar() {
+        if (this.status == StatusPedido.CANCELADO) {
+            throw new IllegalStateException("Pedido já está cancelado.");
+        }
+        this.status = StatusPedido.CANCELADO;
+    }
 }
