@@ -28,8 +28,8 @@ public class PedidoService {
         this.produtoRepository = produtoRepository;
     }
 
-    public synchronized Pedido efetuarPedido(PedidoRequestDTO dto) {
-        List<ProdutoSolicitado> produtosSolicitados = PedidoMapper.toProdutos(dto.getProdutos());
+    public synchronized Pedido efetuarPedido(PedidoRequestDTO pedidoRequestDTO) {
+        List<ProdutoSolicitado> produtosSolicitados = PedidoMapper.toProdutos(pedidoRequestDTO.getProdutos());
         List<Produto> produtos = new ArrayList<>();
         List<ProdutoSolicitado> produtosValidados = new ArrayList<>();
         BigDecimal valorTotal = BigDecimal.ZERO;
@@ -39,7 +39,7 @@ public class PedidoService {
             String descricao = solicitado.getDescricao();
             int quantidade = solicitado.getQuantidade();
 
-            Optional<Produto> produtoEncontrado  = produtoRepository.buscarPorDescricao(descricao);
+            Optional<Produto> produtoEncontrado  = produtoRepository.buscarProdutoPorDescricao(descricao);
             if (produtoEncontrado.isEmpty()) {
                 throw new IllegalArgumentException("Produto não encontrado: " + descricao);
             }
@@ -51,7 +51,7 @@ public class PedidoService {
 
             // Atualiza estoque
             produto.removerDoEstoque(quantidade);
-            produtoRepository.salvar(produto);
+            produtoRepository.salvarProduto(produto);
 
             // Acumula valor total
             valorTotal = valorTotal.add(produto.getPrecoUnitario().multiply(BigDecimal.valueOf(quantidade)));
@@ -73,33 +73,32 @@ public class PedidoService {
         pedido.setValorTotal(valorTotal);
 
         // Salva e retorna
-        pedidoRepository.salvar(pedido);
+        pedidoRepository.salvarPedido(pedido);
         return pedido;
     }
 
     public void cancelarPedido(UUID pedidoId) {
-        Pedido pedido = pedidoRepository.buscarPorId(pedidoId)
+        Pedido pedido = pedidoRepository.buscarPedidoPorId(pedidoId)
                 .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado: " + pedidoId));
 
         pedido.cancelar();
 
         // Repor o estoque do produto
         for (ProdutoSolicitado item : pedido.getProdutos()) {
-            produtoRepository.buscarPorDescricao(item.getDescricao()).ifPresent(produto -> {
+            produtoRepository.buscarProdutoPorDescricao(item.getDescricao()).ifPresent(produto -> {
                 produto.adicionarAoEstoque(item.getQuantidade());
-                produtoRepository.salvar(produto);
+                produtoRepository.salvarProduto(produto);
             });
         }
 
         // Persistir o pedido atualizado
-        pedidoRepository.salvar(pedido);
+        pedidoRepository.salvarPedido(pedido);
     }
 
-//    // Listar Pedidos Ativos
-//    public List<Pedido> listarPedidosAtivos() {
-//        return pedidoRepository.listarTodos()
-//                .stream()
-//                .filter(p -> p.getStatus() == StatusPedido.ATIVO)
-//                .toList();
-//    }
+    public List<Pedido> listarPedidosAtivos() {
+        return pedidoRepository.listarPedidosAtivos()
+                .stream()
+                .filter(p -> p.getStatus() == StatusPedido.ATIVO)
+                .toList();
+    }
 }

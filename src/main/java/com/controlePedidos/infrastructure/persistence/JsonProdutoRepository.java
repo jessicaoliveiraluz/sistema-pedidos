@@ -17,7 +17,7 @@ public class JsonProdutoRepository implements ProdutoRepository {
     private ObjectMapper mapper = new ObjectMapper();
 
     @Override
-    public void salvar(Produto produto) {
+    public void salvarProduto(Produto produto) {
         try {
             List<Produto> produtos = listarProdutosDoArquivo();
 
@@ -32,12 +32,10 @@ public class JsonProdutoRepository implements ProdutoRepository {
                 }
             }
 
-            // Se não encontrou, adiciona novo (opcional, mas útil)
             if (!atualizado) {
                 produtos.add(produto);
             }
 
-            // Salva a lista atualizada no arquivo
             mapper.writeValue(new File(CAMINHO_ARQUIVO_PRODUTOS), produtos);
 
         } catch (Exception e) {
@@ -46,7 +44,7 @@ public class JsonProdutoRepository implements ProdutoRepository {
     }
 
     @Override
-    public Optional<Produto> buscarPorDescricao(String descricao) {
+    public Optional<Produto> buscarProdutoPorDescricao(String descricao) {
         try {
             List<Produto> produtos = listarProdutosDoArquivo();
             return produtos.stream()
@@ -61,7 +59,6 @@ public class JsonProdutoRepository implements ProdutoRepository {
         try {
             File file = new File(CAMINHO_ARQUIVO_PRODUTOS);
             file.listFiles();
-            //(new File("./src/main/java/com/controlePedidos/db")).listFiles()
             if (!file.exists()) {
                 throw new RuntimeException("Arquivo de produtos não encontrado.");
             }
@@ -71,33 +68,4 @@ public class JsonProdutoRepository implements ProdutoRepository {
             throw new RuntimeException("Erro ao ler produtos do arquivo: " + e.getMessage(), e);
         }
     }
-
-//    @Override
-//    public void salvar(Produto produto) {
-//        List<Produto> produtos = listarTodos();
-//        produtos.removeIf(p -> p.getId().equals(produto.getId())); // Atualiza se já existir
-//        produtos.add(produto);
-//        salvarTodos(produtos);
-//    }
-
-//    @Override
-//    public List<Produto> listarTodos() {
-//        try {
-//            File file = new File(FILE_PATH);
-//            if (!file.exists()) return new ArrayList<>();
-//            return mapper.readValue(file, new TypeReference<List<Produto>>() {});
-//        } catch (Exception e) {
-//            throw new RuntimeException("Erro ao ler produtos", e);
-//        }
-//    }
-
-//    private void salvarTodos(List<Produto> produtos) {
-//        try {
-//            File file = new File("data");
-//            if (!file.exists()) file.mkdirs();
-//            mapper.writerWithDefaultPrettyPrinter().writeValue(new File(FILE_PATH), produtos);
-//        } catch (Exception e) {
-//            throw new RuntimeException("Erro ao salvar produtos", e);
-//        }
-//    }
 }

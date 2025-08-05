@@ -4,10 +4,12 @@ import com.controlePedidos.application.mapper.PedidoMapper;
 import com.controlePedidos.application.service.PedidoService;
 import com.controlePedidos.domain.model.Pedido;
 import com.controlePedidos.web.dto.PedidoRequestDTO;
+import com.controlePedidos.web.dto.PedidoResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -53,21 +55,17 @@ public class PedidoController {
         }
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<PedidoResponseDTO>> listarPedidos() {
-//        List<Pedido> pedidos = pedidoService.listarPedidosAtivos();
-//        List<PedidoResponseDTO> response = pedidos.stream()
-//                .map(PedidoResponseDTO::from)
-//                .toList();
-//        return ResponseEntity.ok(response);
-//    }
-
-//    @GetMapping
-//    public ResponseEntity<List<PedidoRequestDTO>> listarPedidos() {
-//        List<PedidoRequestDTO> pedidos = pedidoService.listarPedidos()
-//                .stream()
-//                .map(PedidoRequestDTO::from)
-//                .collect(Collectors.toList());
-//        return ResponseEntity.ok(pedidos);
-//    }
+    @GetMapping("/ativos")
+    public ResponseEntity<?> listarPedidosAtivos() {
+        try {
+            List<Pedido> pedidos = pedidoService.listarPedidosAtivos();
+            List<PedidoResponseDTO> response = pedidos.stream()
+                    .map(PedidoMapper::toDTO)
+                    .toList();
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao listar pedidos ativos: " + e.getMessage());
+        }
+    }
 }

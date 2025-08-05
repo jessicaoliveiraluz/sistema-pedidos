@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @Component
 public class PedidoMapper {
 
-    // Transforma entidade em DTO para retornar no controller
+    // Transforma entidade em DTO
     public static PedidoResponseDTO toDTO(Pedido pedido) {
         List<ItemPedidoDTO> itens = pedido.getProdutos().stream().map(produto -> {
             ItemPedidoDTO item = new ItemPedidoDTO();

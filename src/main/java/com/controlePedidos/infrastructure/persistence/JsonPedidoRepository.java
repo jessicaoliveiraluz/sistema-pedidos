@@ -19,14 +19,14 @@ public class JsonPedidoRepository implements PedidoRepository {
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Override
-    public void salvar(Pedido pedido) {
+    public void salvarPedido(Pedido pedido) {
         try {
             List<Pedido> pedidos = listarPedidosDoArquivo();
 
             boolean atualizado = false;
             for (int i = 0; i < pedidos.size(); i++) {
                 if (pedidos.get(i).getId().equals(pedido.getId())) {
-                    pedidos.set(i, pedido); // Atualiza o pedido existente
+                    pedidos.set(i, pedido);
                     atualizado = true;
                     break;
                 }
@@ -53,17 +53,8 @@ public class JsonPedidoRepository implements PedidoRepository {
         }
     }
 
-
-//    @Override
-//    public void salvar(Pedido pedido) {
-//        List<Pedido> pedidos = listarTodos();
-//        pedidos.removeIf(p -> p.getId().equals(pedido.getId())); // Atualiza se já existir
-//        pedidos.add(pedido);
-//        salvarTodos(pedidos);
-//    }
-
     @Override
-    public Optional<Pedido> buscarPorId(UUID id) {
+    public Optional<Pedido> buscarPedidoPorId(UUID id) {
         try {
             File file = new File(CAMINHO_ARQUIVO_PEDIDOS);
             if (!file.exists()) return Optional.empty();
@@ -78,29 +69,16 @@ public class JsonPedidoRepository implements PedidoRepository {
         }
     }
 
-//    @Override
-//    public List<Pedido> listarTodos() {
-//        try {
-//            File file = new File(CAMINHO_ARQUIVO_PEDIDOS);
-//            if (!file.exists()) return new ArrayList<>();
-//
-//            List<Pedido> todosPedidos = mapper.readValue(file, new TypeReference<List<Pedido>>() {});
-//            return todosPedidos.stream()
-//                    .filter(Pedido::isAtivo) // mantém apenas os pedidos com status diferente de CANCELADO
-//                    .collect(Collectors.toList());
-//
-//        } catch (Exception e) {
-//            throw new RuntimeException("Erro ao ler pedidos", e);
-//        }
-//    }
+    @Override
+    public List<Pedido> listarPedidosAtivos() {
+        try {
+            File file = new File(CAMINHO_ARQUIVO_PEDIDOS);
+            if (!file.exists()) return new ArrayList<>();
 
-//    private void salvarTodos(List<Pedido> pedidos) {
-//        try {
-//            File file = new File("data");
-//            if (!file.exists()) file.mkdirs();
-//            mapper.writerWithDefaultPrettyPrinter().writeValue(new File(FILE_PATH), pedidos);
-//        } catch (Exception e) {
-//            throw new RuntimeException("Erro ao salvar pedidos", e);
-//        }
-//    }
+            return mapper.readValue(file, new TypeReference<List<Pedido>>() {
+            });
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao ler pedidos", e);
+        }
+    }
 }
