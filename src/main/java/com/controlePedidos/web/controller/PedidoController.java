@@ -5,6 +5,7 @@ import com.controlePedidos.application.service.PedidoService;
 import com.controlePedidos.domain.model.Pedido;
 import com.controlePedidos.web.dto.PedidoRequestDTO;
 import com.controlePedidos.web.dto.PedidoResponseDTO;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +27,8 @@ public class PedidoController {
     }
 
     @PostMapping("/efetuarPedido")
-    public ResponseEntity<?> efetuarPedido(@RequestBody PedidoRequestDTO dto) {
+    public ResponseEntity<?> efetuarPedido(@Valid @RequestBody PedidoRequestDTO dto) {
         try {
-            System.out.println("ENTROU");
             Pedido pedido = pedidoService.efetuarPedido(dto);
             return ResponseEntity.status(HttpStatus.CREATED).body(PedidoMapper.toDTO(pedido));
         } catch (IllegalArgumentException e) {

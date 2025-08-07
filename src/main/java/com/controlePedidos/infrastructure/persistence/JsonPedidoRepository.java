@@ -16,7 +16,15 @@ import java.util.UUID;
 public class JsonPedidoRepository implements PedidoRepository {
 
     private static final String CAMINHO_ARQUIVO_PEDIDOS = "./src/main/resources/db/pedidos.json";
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper;
+
+    public JsonPedidoRepository() {
+        this.mapper = new ObjectMapper();
+    }
+
+    public JsonPedidoRepository(ObjectMapper mapper) {
+        this.mapper = mapper;
+    }
 
     @Override
     public void salvarPedido(Pedido pedido) {
@@ -40,7 +48,7 @@ public class JsonPedidoRepository implements PedidoRepository {
         }
     }
 
-    private List<Pedido> listarPedidosDoArquivo() {
+    public List<Pedido> listarPedidosDoArquivo() {
         try {
             File file = new File(CAMINHO_ARQUIVO_PEDIDOS);
             if (!file.exists()) {

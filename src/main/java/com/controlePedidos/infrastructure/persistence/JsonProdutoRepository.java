@@ -16,6 +16,10 @@ public class JsonProdutoRepository implements ProdutoRepository {
     private static final String CAMINHO_ARQUIVO_PRODUTOS = "./src/main/resources/db/produtos.json";
     private ObjectMapper mapper = new ObjectMapper();
 
+    public JsonProdutoRepository(ObjectMapper mapper) {
+        this.mapper = mapper;
+    }
+
     @Override
     public void salvarProduto(Produto produto) {
         try {
